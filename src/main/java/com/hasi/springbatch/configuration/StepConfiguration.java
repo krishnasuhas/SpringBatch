@@ -3,6 +3,7 @@ package com.hasi.springbatch.configuration;
 import com.hasi.springbatch.domain.Billionaire;
 import com.hasi.springbatch.listener.ChunkListener;
 import com.hasi.springbatch.listener.JobListener;
+import com.hasi.springbatch.processor.DummyProcessor;
 import com.hasi.springbatch.readers.ListReader;
 import com.hasi.springbatch.readers.SqlReader;
 import com.hasi.springbatch.readers.StateFullStreamReader;
@@ -15,6 +16,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.JobStepBuilder;
+import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -47,6 +49,9 @@ public class StepConfiguration {
 
     @Autowired
     private TaskletConfiguration taskletConfiguration;
+
+    @Autowired
+    private DummyProcessor dummyProcessor;
 
     @Bean
     public Step stepCounting() {
@@ -117,6 +122,26 @@ public class StepConfiguration {
         return stepBuilderFactory.get("stepStateFullStreamReader")
                 .<String, String>chunk(2)
                 .reader(new StateFullStreamReader(List.of("1", "2", "3", "4", "5")))
+                .writer(logWriter.consoleWriter())
+                .build();
+    }
+
+    @Bean
+    public Step stepRetry() {
+        return stepBuilderFactory.get("stepStatelessReader")
+                .<String, String>chunk(2)
+                .reader(new ListItemReader<>(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))
+                .processor(dummyProcessor)
+                .writer(logWriter.consoleWriter())
+                .build();
+    }
+
+    @Bean
+    public Step stepRetry2() {
+        return stepBuilderFactory.get("stepStatelessReader")
+                .<String, String>chunk(2)
+                .reader(new ListItemReader<>(List.of("11", "22", "33", "44", "55", "66", "77", "88", "99", "100")))
+                .processor(dummyProcessor)
                 .writer(logWriter.consoleWriter())
                 .build();
     }

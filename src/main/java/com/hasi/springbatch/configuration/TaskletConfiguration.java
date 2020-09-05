@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class TaskletConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(TaskletConfiguration.class);
 
+    @StepScope
     public static final Tasklet countingTasklet = (StepContribution stepContribution, ChunkContext chunkContext) -> {
         logger.info("{} has been executed on thread {}", chunkContext.getStepContext(), Thread.currentThread().getName());
         return RepeatStatus.FINISHED;

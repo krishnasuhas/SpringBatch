@@ -133,4 +133,21 @@ public class JobConfiguration {
                 .start(stepConfiguration.stepStateFullStreamReader())
                 .build();
     }
+
+    /**
+     * Number of records are 100 and
+     * number of steps are 2 and
+     * chunk size is 10
+     * if the batch fails at 56 then restart will start at
+     *
+     * @return
+     * @throws Exception
+     */
+    @Bean
+    public Job job13() throws Exception {
+        return jobBuilderFactory.get("job13 retry")
+                .start(stepConfiguration.stepRetry())
+                .next(stepConfiguration.stepRetry2())
+                .build();
+    }
 }

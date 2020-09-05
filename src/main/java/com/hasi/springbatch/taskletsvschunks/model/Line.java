@@ -1,11 +1,15 @@
 package com.hasi.springbatch.taskletsvschunks.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@Entity
 public class Line implements Serializable {
 
+    @Id
     private String name;
     private LocalDate dob;
     private Long age;
